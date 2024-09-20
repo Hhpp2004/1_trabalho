@@ -18,9 +18,10 @@ No *cria_no(int info)
     novo->fb = 0;
     return novo;
 }
-
 No *insere_no_abb(No *raiz, int info)
-{
+{    
+    int cont_esq = 0;
+    int cont_dir = 0;    
     No *novo = cria_no(info);
     No *p = NULL, *q = raiz;
     if (raiz == NULL)
@@ -51,68 +52,58 @@ No *insere_no_abb(No *raiz, int info)
         {
             p->dir = novo;
         }
+        
     }
     return raiz;
 }
 
 int verifica(No *raiz)
-{
-    int num;
+{    
     if (raiz != NULL)
-    {
-        verifica(raiz->esq);
-        verifica(raiz->dir);
+    {        
         if (raiz->fb >= 2 || raiz->fb <= -2)
         {
-            num = 1;
-        }
+            return 1;
+        }       
+        else if(verifica(raiz->esq) == 0 && verifica(raiz->dir) == 0)
+        {
+            return 0;
+        }       
         else
         {
-            num = 0;
-        }
+            return 1;
+        } 
     }
-    return num;
-}
-
-void deletar_dados(No *raiz)
-{
-    if (raiz != NULL)
-    {
-        deletar_dados(raiz->esq);
-        deletar_dados(raiz->dir);
-        free(raiz);
-    }
+    return 0;
 }
 
 int main(void)
 {
     No *arvore = NULL;
     int num_teste;
-    int num;
+    int num;    
     int entrada;
 
-    
     scanf("%i", &num_teste);
     for (int i = 0; i < num_teste; i++)
     {
         do
-        {            
+        {
             scanf("%i", &entrada);
             if (entrada != -1)
             {
                 arvore = insere_no_abb(arvore, entrada);
             }
         } while (entrada != -1);
-        num = verifica(arvore);
-        if (num == 0)
-        {
-            printf("sim\n");
-        }
-        else
+        num = verifica(arvore);        
+        if (num == 1)
         {
             printf("nao\n");
         }
-        //deletar_dados(arvore);
+        else
+        {
+            printf("sim\n");
+        }
         free(arvore);
         arvore = NULL;
     }
