@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 typedef struct no
 {
     int num;
@@ -19,9 +18,7 @@ No *cria_no(int info)
     return novo;
 }
 No *insere_no_abb(No *raiz, int info)
-{    
-    int cont_esq = 0;
-    int cont_dir = 0;    
+{
     No *novo = cria_no(info);
     No *p = NULL, *q = raiz;
     if (raiz == NULL)
@@ -35,12 +32,12 @@ No *insere_no_abb(No *raiz, int info)
             p = q;
             if (info < q->num)
             {
-                p->fb++;
+                q->fb++;
                 q = q->esq;
             }
             else
             {
-                p->fb--;
+                q->fb--;
                 q = q->dir;
             }
         }
@@ -52,36 +49,37 @@ No *insere_no_abb(No *raiz, int info)
         {
             p->dir = novo;
         }
-        
     }
     return raiz;
 }
 
-int verifica(No *raiz)
-{    
-    if (raiz != NULL)
-    {        
+int calculo_fb(No *raiz)
+{
+    int num = 0;
+    int aux = 0;
+    if(raiz != NULL)
+    {
         if (raiz->fb >= 2 || raiz->fb <= -2)
         {
-            return 1;
-        }       
-        else if(verifica(raiz->esq) == 0 && verifica(raiz->dir) == 0)
+            aux = 1;
+            num = 1;
+        }
+        if(aux != 1)
         {
-            return 0;
-        }       
-        else
-        {
-            return 1;
-        } 
+            aux = calculo_fb(raiz->esq);
+            aux = calculo_fb(raiz->dir);
+            num = aux;
+        }
     }
-    return 0;
+    return num;
 }
 
 int main(void)
 {
+
     No *arvore = NULL;
     int num_teste;
-    int num;    
+    int num;
     int entrada;
 
     scanf("%i", &num_teste);
@@ -95,7 +93,7 @@ int main(void)
                 arvore = insere_no_abb(arvore, entrada);
             }
         } while (entrada != -1);
-        num = verifica(arvore);        
+        num = calculo_fb(arvore);
         if (num == 1)
         {
             printf("nao\n");
